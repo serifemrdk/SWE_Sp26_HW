@@ -9,16 +9,23 @@ def build_query(satellite_id):
     return (query, headers)
 
 def parse_response(response):
-    result={"msg":"", "satellite_id": "", "satellite_name": "", "line1":"", "line2":""}
+    result={"msg":"", "satellite_id": "", "satellite_name": "", "line1":"", "line2":"", "date_time":""}
+
     if response.status_code == 200:
         response_json = response.json()
+
         result["satellite_id"] = response_json["satelliteId"]
         result["satellite_name"] = response_json["name"]
         result["line1"] = response_json["line1"]
         result["line2"] = response_json["line2"]
+
+        result["date_time"] = response_json["date"]
+
         result["msg"] = "OK"
+
     else:
         result = None
+
     return result
 
 def parse_satellite(tle_dict, input_date_time):
