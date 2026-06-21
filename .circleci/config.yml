@@ -25,7 +25,23 @@ jobs:
             coverage run --branch -m unittest discover
             coverage report
 
+  deploy_to_render:
+    docker:
+      - image: cimg/base:stable
+
+    steps:
+      - run:
+          name: Deploy to Render
+          command: |
+            curl -X POST "$RENDER_DEPLOY_HOOK"
+
 workflows:
-  build-and-test:
+  build-test-and-deploy:
     jobs:
       - build-and-test
+      - deploy_to_render:
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only: main
